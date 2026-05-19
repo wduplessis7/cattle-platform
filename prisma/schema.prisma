@@ -1,0 +1,561 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── AUTH ──────────────────────────────────────────────────────────────────
+
+model User {
+  id            String    @id @default(uuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  passwordHash  String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  farmUsers     FarmUser[]
+  accounts      Account[]
+  sessions      Session[]
+}
+
+model Account {
+  id                String  @id @default(uuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ─── FARMS (TENANT SCOPE) ─────────────────────────────────────────────────
+
+model Farm {
+  id          String    @id @default(uuid())
+  name        String
+  slug        String    @unique
+  description String?
+  address     String?
+  country     String?
+  settings    Json      @default("{}")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  farmUsers           FarmUser[]
+  camps               Camp[]
+  movements           Movement[]
+  animalOwnerships    AnimalOwnership[]
+  animalTransfersFrom AnimalTransfer[]    @relation("TransferFrom")
+  animalTransfersTo   AnimalTransfer[]    @relation("TransferTo")
+  animalShares        AnimalShare[]       @relation("SharedWith")
+  animalSharesOwned   AnimalShare[]       @relation("ShareOwner")
+  breedingEvents      BreedingEvent[]
+  calvingRecords      CalvingRecord[]
+  treatments          Treatment[]
+  vaccinations        Vaccination[]
+  medicineInventory   MedicineInventory[]
+  weights             Weight[]
+  documents           Document[]
+  costEntries         CostEntry[]
+  auditLogs           AuditLog[]
+  notifications       Notification[]
+
+  @@index([slug])
+}
+
+model FarmUser {
+  id        String   @id @default(uuid())
+  farmId    String
+  userId    String
+  role      FarmRole @default(WORKER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  farm      Farm     @relation(fields: [farmId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([farmId, userId])
+  @@index([farmId])
+  @@index([userId])
+}
+
+enum FarmRole {
+  SUPER_ADMIN
+  FARM_OWNER
+  FARM_MANAGER
+  VETERINARIAN
+  WORKER
+  ACCOUNTANT
+  VIEWER
+}
+
+// ─── ANIMALS (GLOBAL IDENTITY) ────────────────────────────────────────────
+
+model Animal {
+  id             String       @id @default(uuid())
+  registrationNo String       @unique
+  rfidTag        String?      @unique
+  qrCode         String?      @unique
+  name           String?
+  breedId        String?
+  species        String       @default("cattle")
+  dob            DateTime?
+  gender         Gender
+  color          String?
+  status         AnimalStatus @default(ACTIVE)
+  photos         String[]
+  motherId       String?
+  fatherId       String?
+  birthFarmId    String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  deletedAt      DateTime?
+
+  breed          Breed?       @relation(fields: [breedId], references: [id])
+  mother         Animal?      @relation("Dam", fields: [motherId], references: [id])
+  father         Animal?      @relation("Sire", fields: [fatherId], references: [id])
+  offspringAsDam Animal[]     @relation("Dam")
+  offspringAsSire Animal[]    @relation("Sire")
+
+  ownerships     AnimalOwnership[]
+  transfers      AnimalTransfer[]
+  shares         AnimalShare[]
+  breedingAsDam  BreedingEvent[] @relation("BreedingDam")
+  breedingAsSire BreedingEvent[] @relation("BreedingSire")
+  calvingRecords CalvingRecord[] @relation("CalvingDam")
+  calfRecords    CalvingRecord[] @relation("CalvingCalf")
+  treatments     Treatment[]
+  vaccinations   Vaccination[]
+  weights        Weight[]
+  movements      Movement[]
+  documents      Document[]
+  costEntries    CostEntry[]
+  timeline       AnimalTimelineEvent[]
+
+  @@index([registrationNo])
+  @@index([rfidTag])
+  @@index([motherId])
+  @@index([fatherId])
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum AnimalStatus {
+  ACTIVE
+  SOLD
+  DECEASED
+  TRANSFERRED
+  LOANED
+}
+
+model Breed {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  species     String   @default("cattle")
+  description String?
+  animals     Animal[]
+}
+
+// ─── OWNERSHIP & TRANSFERS ────────────────────────────────────────────────
+
+model AnimalOwnership {
+  id            String        @id @default(uuid())
+  animalId      String
+  farmId        String
+  ownershipType OwnershipType @default(OWNER)
+  startDate     DateTime
+  endDate       DateTime?
+  notes         String?
+  createdAt     DateTime      @default(now())
+
+  animal        Animal        @relation(fields: [animalId], references: [id])
+  farm          Farm          @relation(fields: [farmId], references: [id])
+
+  @@index([animalId])
+  @@index([farmId])
+}
+
+enum OwnershipType {
+  OWNER
+  SHARED_OWNERSHIP
+  BREEDING_LOAN
+  TEMPORARY_TRANSFER
+  AUCTION_HOLDING
+  LEASE
+}
+
+model AnimalTransfer {
+  id               String       @id @default(uuid())
+  animalId         String
+  fromFarmId       String
+  toFarmId         String
+  transferType     TransferType
+  transferDate     DateTime
+  salePrice        Decimal?     @db.Decimal(10, 2)
+  transportDetails String?
+  auctionDetails   String?
+  notes            String?
+  createdAt        DateTime     @default(now())
+
+  animal           Animal       @relation(fields: [animalId], references: [id])
+  fromFarm         Farm         @relation("TransferFrom", fields: [fromFarmId], references: [id])
+  toFarm           Farm         @relation("TransferTo", fields: [toFarmId], references: [id])
+
+  @@index([animalId])
+}
+
+enum TransferType {
+  SALE
+  LOAN
+  BREEDING_LOAN
+  AUCTION
+  GIFT
+  RETURN
+}
+
+model AnimalShare {
+  id               String    @id @default(uuid())
+  animalId         String
+  ownerFarmId      String
+  sharedWithFarmId String
+  permissions      String[]  @default([])
+  expiresAt        DateTime?
+  createdAt        DateTime  @default(now())
+
+  animal           Animal    @relation(fields: [animalId], references: [id])
+  ownerFarm        Farm      @relation("ShareOwner", fields: [ownerFarmId], references: [id])
+  sharedWithFarm   Farm      @relation("SharedWith", fields: [sharedWithFarmId], references: [id])
+
+  @@index([animalId])
+}
+
+// ─── CAMPS & MOVEMENTS ────────────────────────────────────────────────────
+
+model Camp {
+  id          String   @id @default(uuid())
+  farmId      String
+  name        String
+  type        String?
+  capacity    Int?
+  coordinates Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  farm          Farm       @relation(fields: [farmId], references: [id])
+  movementsFrom Movement[] @relation("FromCamp")
+  movementsTo   Movement[] @relation("ToCamp")
+
+  @@index([farmId])
+}
+
+model Movement {
+  id         String   @id @default(uuid())
+  animalId   String
+  farmId     String
+  fromCampId String?
+  toCampId   String?
+  movedAt    DateTime
+  reason     String?
+  notes      String?
+  createdAt  DateTime @default(now())
+
+  animal     Animal   @relation(fields: [animalId], references: [id])
+  farm       Farm     @relation(fields: [farmId], references: [id])
+  fromCamp   Camp?    @relation("FromCamp", fields: [fromCampId], references: [id])
+  toCamp     Camp?    @relation("ToCamp", fields: [toCampId], references: [id])
+
+  @@index([animalId])
+  @@index([farmId])
+}
+
+// ─── BREEDING & CALVING ───────────────────────────────────────────────────
+
+model BreedingEvent {
+  id                  String          @id @default(uuid())
+  damId               String
+  sireId              String?
+  farmId              String
+  method              BreedingMethod
+  eventDate           DateTime
+  pregnancyCheckDate  DateTime?
+  expectedCalvingDate DateTime?
+  result              BreedingResult?
+  notes               String?
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+
+  dam           Animal         @relation("BreedingDam", fields: [damId], references: [id])
+  sire          Animal?        @relation("BreedingSire", fields: [sireId], references: [id])
+  farm          Farm           @relation(fields: [farmId], references: [id])
+  calvingRecord CalvingRecord?
+
+  @@index([damId])
+  @@index([farmId])
+}
+
+enum BreedingMethod {
+  NATURAL
+  ARTIFICIAL_INSEMINATION
+  EMBRYO_TRANSFER
+}
+
+enum BreedingResult {
+  PREGNANT
+  NOT_PREGNANT
+  UNKNOWN
+  ABORTED
+}
+
+model CalvingRecord {
+  id              String    @id @default(uuid())
+  breedingEventId String?   @unique
+  damId           String
+  sireId          String?
+  farmId          String
+  calvedAt        DateTime
+  calfId          String?   @unique
+  weightKg        Decimal?  @db.Decimal(6, 2)
+  gender          Gender?
+  complications   String?
+  assisted        Boolean   @default(false)
+  twins           Boolean   @default(false)
+  colostrumStatus Boolean   @default(false)
+  mortality       Boolean   @default(false)
+  notes           String?
+  createdAt       DateTime  @default(now())
+
+  breedingEvent   BreedingEvent? @relation(fields: [breedingEventId], references: [id])
+  dam             Animal         @relation("CalvingDam", fields: [damId], references: [id])
+  calf            Animal?        @relation("CalvingCalf", fields: [calfId], references: [id])
+  farm            Farm           @relation(fields: [farmId], references: [id])
+
+  @@index([damId])
+  @@index([farmId])
+}
+
+// ─── HEALTH ───────────────────────────────────────────────────────────────
+
+model Treatment {
+  id            String    @id @default(uuid())
+  animalId      String
+  farmId        String
+  vetId         String?
+  illness       String?
+  diagnosis     String?
+  treatmentDate DateTime
+  followUpDate  DateTime?
+  notes         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  animal        Animal              @relation(fields: [animalId], references: [id])
+  farm          Farm                @relation(fields: [farmId], references: [id])
+  medicines     TreatmentMedicine[]
+
+  @@index([animalId])
+  @@index([farmId])
+}
+
+model TreatmentMedicine {
+  id          String    @id @default(uuid())
+  treatmentId String
+  medicineId  String
+  dosage      String?
+  units       String?
+
+  treatment   Treatment @relation(fields: [treatmentId], references: [id])
+  medicine    Medicine  @relation(fields: [medicineId], references: [id])
+}
+
+model Vaccination {
+  id             String    @id @default(uuid())
+  animalId       String
+  farmId         String
+  vaccineId      String
+  administeredAt DateTime
+  boosterDue     DateTime?
+  batchNo        String?
+  administeredBy String?
+  createdAt      DateTime  @default(now())
+
+  animal         Animal    @relation(fields: [animalId], references: [id])
+  farm           Farm      @relation(fields: [farmId], references: [id])
+  vaccine        Medicine  @relation(fields: [vaccineId], references: [id])
+
+  @@index([animalId])
+  @@index([farmId])
+}
+
+model Medicine {
+  id             String   @id @default(uuid())
+  name           String
+  type           String
+  controlled     Boolean  @default(false)
+  withdrawalDays Int      @default(0)
+  unit           String?
+  description    String?
+  createdAt      DateTime @default(now())
+
+  inventory    MedicineInventory[]
+  treatments   TreatmentMedicine[]
+  vaccinations Vaccination[]
+}
+
+model MedicineInventory {
+  id          String    @id @default(uuid())
+  farmId      String
+  medicineId  String
+  stockQty    Decimal   @db.Decimal(10, 2)
+  batchNo     String?
+  expiryDate  DateTime?
+  supplier    String?
+  costPerUnit Decimal?  @db.Decimal(10, 2)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  farm        Farm      @relation(fields: [farmId], references: [id])
+  medicine    Medicine  @relation(fields: [medicineId], references: [id])
+
+  @@index([farmId])
+}
+
+// ─── WEIGHTS ──────────────────────────────────────────────────────────────
+
+model Weight {
+  id         String   @id @default(uuid())
+  animalId   String
+  farmId     String
+  weightKg   Decimal  @db.Decimal(6, 2)
+  bcs        Int?
+  capturedAt DateTime
+  capturedBy String?
+  createdAt  DateTime @default(now())
+
+  animal     Animal   @relation(fields: [animalId], references: [id])
+  farm       Farm     @relation(fields: [farmId], references: [id])
+
+  @@index([animalId])
+}
+
+// ─── FINANCE ──────────────────────────────────────────────────────────────
+
+model CostEntry {
+  id          String   @id @default(uuid())
+  animalId    String?
+  farmId      String
+  category    String
+  amount      Decimal  @db.Decimal(10, 2)
+  description String?
+  entryDate   DateTime
+  createdAt   DateTime @default(now())
+
+  animal      Animal?  @relation(fields: [animalId], references: [id])
+  farm        Farm     @relation(fields: [farmId], references: [id])
+
+  @@index([farmId])
+}
+
+// ─── DOCUMENTS ────────────────────────────────────────────────────────────
+
+model Document {
+  id          String   @id @default(uuid())
+  animalId    String?
+  farmId      String
+  type        String
+  filename    String
+  path        String
+  accessLevel String   @default("farm")
+  uploadedAt  DateTime @default(now())
+
+  animal      Animal?  @relation(fields: [animalId], references: [id])
+  farm        Farm     @relation(fields: [farmId], references: [id])
+
+  @@index([animalId])
+  @@index([farmId])
+}
+
+// ─── TIMELINE ─────────────────────────────────────────────────────────────
+
+model AnimalTimelineEvent {
+  id         String   @id @default(uuid())
+  animalId   String
+  eventType  String
+  eventData  Json     @default("{}")
+  occurredAt DateTime
+  recordedBy String?
+  farmId     String?
+  createdAt  DateTime @default(now())
+
+  animal     Animal   @relation(fields: [animalId], references: [id])
+
+  @@index([animalId])
+  @@index([occurredAt])
+}
+
+// ─── AUDIT & NOTIFICATIONS ────────────────────────────────────────────────
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  farmId    String?
+  userId    String?
+  action    String
+  modelType String
+  modelId   String
+  oldValues Json?
+  newValues Json?
+  createdAt DateTime @default(now())
+
+  farm      Farm?    @relation(fields: [farmId], references: [id])
+
+  @@index([farmId])
+  @@index([modelType, modelId])
+}
+
+model Notification {
+  id        String    @id @default(uuid())
+  userId    String
+  farmId    String?
+  type      String
+  data      Json      @default("{}")
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  farm      Farm?     @relation(fields: [farmId], references: [id])
+
+  @@index([userId])
+  @@index([farmId])
+}

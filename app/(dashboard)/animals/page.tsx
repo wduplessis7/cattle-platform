@@ -58,11 +58,11 @@ async function getAnimals(
 }
 
 const statusColors: Record<string, string> = {
-  ACTIVE: "bg-green-100 text-green-700",
-  SOLD: "bg-amber-100 text-amber-700",
-  DECEASED: "bg-stone-100 text-stone-500",
+  ACTIVE: "bg-emerald-100 text-emerald-700",
+  SOLD: "bg-blue-100 text-blue-700",
+  DECEASED: "bg-slate-100 text-slate-600",
   TRANSFERRED: "bg-blue-100 text-blue-700",
-  LOANED: "bg-purple-100 text-purple-700",
+  LOANED: "bg-amber-100 text-amber-700",
 };
 
 export default async function AnimalsPage({
@@ -90,14 +90,14 @@ export default async function AnimalsPage({
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-4">
         <div className="flex-1">
-          <h1 className="text-2xl font-bold text-[#1C1208]">Animals</h1>
-          <p className="text-sm text-[#8B7355] mt-0.5">
+          <h1 className="text-2xl font-bold text-[#0F172A]">Animals</h1>
+          <p className="text-sm text-[#64748B] mt-0.5">
             {total.toLocaleString()} animal{total !== 1 ? "s" : ""} on record
           </p>
         </div>
         <Link
           href="/animals/new"
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#4A7C2F] hover:bg-[#3D6B24] text-white text-sm font-semibold transition"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#16A34A] hover:bg-[#15803D] text-white text-sm font-semibold transition"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -107,13 +107,13 @@ export default async function AnimalsPage({
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-xl border border-[#E5DAC8]">
-        <div className="flex flex-col sm:flex-row gap-3 p-4 border-b border-[#E5DAC8]">
+      <div className="bg-white rounded-xl border border-[#E2E8F0]">
+        <div className="flex flex-col sm:flex-row gap-3 p-4 border-b border-[#E2E8F0]">
           {/* Search */}
           <form method="get" className="flex-1 flex gap-3">
             <div className="flex-1 relative">
               <svg
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8B7355]"
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#64748B]"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -125,7 +125,7 @@ export default async function AnimalsPage({
                 type="text"
                 defaultValue={search}
                 placeholder="Search by reg no, name, or RFID..."
-                className="w-full pl-9 pr-4 py-2 rounded-lg border border-[#E5DAC8] bg-white text-sm text-[#3D2B14] placeholder-[#C9B89A] focus:outline-none focus:ring-2 focus:ring-[#4A7C2F] focus:border-transparent"
+                className="w-full pl-9 pr-4 py-2 rounded-lg border border-[#E2E8F0] bg-white text-sm text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#22C55E] focus:border-transparent"
               />
             </div>
 
@@ -133,7 +133,7 @@ export default async function AnimalsPage({
             <select
               name="status"
               defaultValue={status}
-              className="rounded-lg border border-[#E5DAC8] bg-white text-sm text-[#3D2B14] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#4A7C2F]"
+              className="rounded-lg border border-[#E2E8F0] bg-white text-sm text-[#0F172A] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#22C55E]"
             >
               <option value="ALL">All Statuses</option>
               <option value="ACTIVE">Active</option>
@@ -145,7 +145,7 @@ export default async function AnimalsPage({
 
             <button
               type="submit"
-              className="px-4 py-2 rounded-lg bg-[#F7F3EC] border border-[#E5DAC8] text-sm font-medium text-[#3D2B14] hover:bg-[#EDE6D8] transition"
+              className="px-4 py-2 rounded-lg bg-[#F1F5F9] border border-[#E2E8F0] text-sm font-medium text-[#0F172A] hover:bg-[#E2E8F0] transition"
             >
               Filter
             </button>
@@ -156,35 +156,35 @@ export default async function AnimalsPage({
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-[#E5DAC8]">
-                <th className="px-4 py-3 text-left text-xs font-semibold text-[#8B7355] uppercase tracking-wider">
+              <tr className="border-b border-[#E2E8F0]">
+                <th className="px-4 py-3 text-left text-xs font-semibold text-[#64748B] uppercase tracking-wider">
                   Reg No
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-[#8B7355] uppercase tracking-wider">
+                <th className="px-4 py-3 text-left text-xs font-semibold text-[#64748B] uppercase tracking-wider">
                   Name
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-[#8B7355] uppercase tracking-wider hidden sm:table-cell">
+                <th className="px-4 py-3 text-left text-xs font-semibold text-[#64748B] uppercase tracking-wider hidden sm:table-cell">
                   Breed
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-[#8B7355] uppercase tracking-wider hidden md:table-cell">
+                <th className="px-4 py-3 text-left text-xs font-semibold text-[#64748B] uppercase tracking-wider hidden md:table-cell">
                   Gender
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-[#8B7355] uppercase tracking-wider">
+                <th className="px-4 py-3 text-left text-xs font-semibold text-[#64748B] uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-[#8B7355] uppercase tracking-wider hidden lg:table-cell">
+                <th className="px-4 py-3 text-left text-xs font-semibold text-[#64748B] uppercase tracking-wider hidden lg:table-cell">
                   Age
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-[#8B7355] uppercase tracking-wider hidden lg:table-cell">
+                <th className="px-4 py-3 text-left text-xs font-semibold text-[#64748B] uppercase tracking-wider hidden lg:table-cell">
                   DOB
                 </th>
                 <th className="px-4 py-3" />
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#F0E8D8]">
+            <tbody className="divide-y divide-[#F1F5F9]">
               {animals.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="px-4 py-12 text-center text-sm text-[#8B7355]">
+                  <td colSpan={8} className="px-4 py-12 text-center text-sm text-[#64748B]">
                     {search || status !== "ALL"
                       ? "No animals match your filters."
                       : "No animals yet. Click \"Add Animal\" to get started."}
@@ -194,24 +194,24 @@ export default async function AnimalsPage({
                 animals.map((animal) => (
                   <tr
                     key={animal.id}
-                    className="hover:bg-[#FAF6EF] transition-colors"
+                    className="hover:bg-[#F8FAFC] transition-colors"
                   >
                     <td className="px-4 py-3">
-                      <span className="font-mono text-xs font-medium text-[#3D2B14]">
+                      <span className="font-mono text-xs font-medium text-[#0F172A]">
                         {animal.registrationNo}
                       </span>
                     </td>
                     <td className="px-4 py-3">
-                      <span className="font-medium text-[#1C1208]">
+                      <span className="font-medium text-[#0F172A]">
                         {animal.name || (
-                          <span className="text-[#C9B89A] italic">Unnamed</span>
+                          <span className="text-[#94A3B8] italic">Unnamed</span>
                         )}
                       </span>
                     </td>
-                    <td className="px-4 py-3 hidden sm:table-cell text-[#8B7355]">
+                    <td className="px-4 py-3 hidden sm:table-cell text-[#64748B]">
                       {animal.breed?.name || "—"}
                     </td>
-                    <td className="px-4 py-3 hidden md:table-cell text-[#8B7355] capitalize">
+                    <td className="px-4 py-3 hidden md:table-cell text-[#64748B] capitalize">
                       {animal.gender.toLowerCase()}
                     </td>
                     <td className="px-4 py-3">
@@ -224,16 +224,16 @@ export default async function AnimalsPage({
                         {animal.status.charAt(0) + animal.status.slice(1).toLowerCase()}
                       </span>
                     </td>
-                    <td className="px-4 py-3 hidden lg:table-cell text-[#8B7355]">
+                    <td className="px-4 py-3 hidden lg:table-cell text-[#64748B]">
                       {calculateAge(animal.dob)}
                     </td>
-                    <td className="px-4 py-3 hidden lg:table-cell text-[#8B7355]">
+                    <td className="px-4 py-3 hidden lg:table-cell text-[#64748B]">
                       {formatDate(animal.dob)}
                     </td>
                     <td className="px-4 py-3 text-right">
                       <Link
                         href={`/animals/${animal.id}`}
-                        className="text-[#4A7C2F] hover:text-[#3D6B24] text-xs font-medium"
+                        className="text-[#16A34A] hover:text-[#15803D] text-xs font-medium"
                       >
                         View
                       </Link>
@@ -247,8 +247,8 @@ export default async function AnimalsPage({
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-between px-4 py-3 border-t border-[#E5DAC8]">
-            <p className="text-xs text-[#8B7355]">
+          <div className="flex items-center justify-between px-4 py-3 border-t border-[#E2E8F0]">
+            <p className="text-xs text-[#64748B]">
               Showing {(page - 1) * PAGE_SIZE + 1}–
               {Math.min(page * PAGE_SIZE, total)} of {total.toLocaleString()}
             </p>
@@ -256,7 +256,7 @@ export default async function AnimalsPage({
               {page > 1 && (
                 <Link
                   href={`/animals?page=${page - 1}&search=${search}&status=${status}`}
-                  className="px-3 py-1.5 rounded-lg border border-[#E5DAC8] text-xs font-medium text-[#3D2B14] hover:bg-[#F7F3EC] transition"
+                  className="px-3 py-1.5 rounded-lg border border-[#E2E8F0] text-xs font-medium text-[#0F172A] hover:bg-[#F1F5F9] transition"
                 >
                   Previous
                 </Link>
@@ -264,7 +264,7 @@ export default async function AnimalsPage({
               {page < totalPages && (
                 <Link
                   href={`/animals?page=${page + 1}&search=${search}&status=${status}`}
-                  className="px-3 py-1.5 rounded-lg border border-[#E5DAC8] text-xs font-medium text-[#3D2B14] hover:bg-[#F7F3EC] transition"
+                  className="px-3 py-1.5 rounded-lg border border-[#E2E8F0] text-xs font-medium text-[#0F172A] hover:bg-[#F1F5F9] transition"
                 >
                   Next
                 </Link>

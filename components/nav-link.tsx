@@ -20,8 +20,8 @@ export function NavLink({ href, icon, label }: NavLinkProps) {
     return (
       <Link
         href={href}
-        className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-semibold transition-colors"
-        style={{ backgroundColor: "#D4981F", color: "#1A1208" }}
+        className="flex items-center gap-3 pl-[calc(0.75rem-3px)] pr-3 py-2 rounded-lg text-sm font-semibold transition-colors border-l-[3px] border-[#22C55E]"
+        style={{ backgroundColor: "#1A3322", color: "#FFFFFF" }}
       >
         <span>{icon}</span>
         {label}
@@ -33,14 +33,14 @@ export function NavLink({ href, icon, label }: NavLinkProps) {
     <Link
       href={href}
       className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors group"
-      style={{ color: "#A89070" }}
+      style={{ color: "#94A3B8" }}
       onMouseEnter={(e) => {
-        (e.currentTarget as HTMLAnchorElement).style.backgroundColor = "#2A1E10";
-        (e.currentTarget as HTMLAnchorElement).style.color = "#D4C9B0";
+        (e.currentTarget as HTMLAnchorElement).style.backgroundColor = "#1A3322";
+        (e.currentTarget as HTMLAnchorElement).style.color = "#FFFFFF";
       }}
       onMouseLeave={(e) => {
         (e.currentTarget as HTMLAnchorElement).style.backgroundColor = "transparent";
-        (e.currentTarget as HTMLAnchorElement).style.color = "#A89070";
+        (e.currentTarget as HTMLAnchorElement).style.color = "#94A3B8";
       }}
     >
       <span>{icon}</span>

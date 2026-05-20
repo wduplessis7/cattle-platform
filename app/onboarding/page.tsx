@@ -80,11 +80,11 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#F7F3EC] px-4">
+    <div className="min-h-screen flex items-center justify-center bg-[#F1F5F9] px-4">
       <div className="w-full max-w-lg">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#4A7C2F] mb-4">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#16A34A] mb-4">
             <svg
               className="w-8 h-8 text-white"
               fill="none"
@@ -99,39 +99,39 @@ export default function OnboardingPage() {
               />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold text-[#1C1208]">
+          <h1 className="text-2xl font-bold text-[#0F172A]">
             Set up your farm
           </h1>
-          <p className="text-sm text-[#8B7355] mt-1">
+          <p className="text-sm text-[#64748B] mt-1">
             Let&apos;s get your HerdCore farm profile ready
           </p>
         </div>
 
         {/* Card */}
-        <div className="bg-white rounded-2xl shadow-sm border border-[#E5DAC8] p-8">
+        <div className="bg-white rounded-2xl shadow-sm border border-[#E2E8F0] p-8">
           {/* Steps indicator */}
           <div className="flex items-center gap-2 mb-7">
             <div className="flex items-center gap-1.5">
-              <div className="w-6 h-6 rounded-full bg-[#4A7C2F] flex items-center justify-center">
+              <div className="w-6 h-6 rounded-full bg-[#16A34A] flex items-center justify-center">
                 <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
               </div>
-              <span className="text-xs font-medium text-[#4A7C2F]">Account</span>
+              <span className="text-xs font-medium text-[#16A34A]">Account</span>
             </div>
-            <div className="flex-1 h-px bg-[#E5DAC8]" />
+            <div className="flex-1 h-px bg-[#E2E8F0]" />
             <div className="flex items-center gap-1.5">
-              <div className="w-6 h-6 rounded-full bg-[#4A7C2F] flex items-center justify-center">
+              <div className="w-6 h-6 rounded-full bg-[#16A34A] flex items-center justify-center">
                 <span className="text-xs font-bold text-white">2</span>
               </div>
-              <span className="text-xs font-medium text-[#4A7C2F]">Farm Details</span>
+              <span className="text-xs font-medium text-[#16A34A]">Farm Details</span>
             </div>
-            <div className="flex-1 h-px bg-[#E5DAC8]" />
+            <div className="flex-1 h-px bg-[#E2E8F0]" />
             <div className="flex items-center gap-1.5">
-              <div className="w-6 h-6 rounded-full bg-[#E5DAC8] flex items-center justify-center">
-                <span className="text-xs font-bold text-[#8B7355]">3</span>
+              <div className="w-6 h-6 rounded-full bg-[#E2E8F0] flex items-center justify-center">
+                <span className="text-xs font-bold text-[#64748B]">3</span>
               </div>
-              <span className="text-xs font-medium text-[#8B7355]">Dashboard</span>
+              <span className="text-xs font-medium text-[#64748B]">Dashboard</span>
             </div>
           </div>
 
@@ -145,7 +145,7 @@ export default function OnboardingPage() {
             <div>
               <label
                 htmlFor="farmName"
-                className="block text-sm font-medium text-[#3D2B14] mb-1.5"
+                className="block text-sm font-medium text-[#0F172A] mb-1.5"
               >
                 Farm name
               </label>
@@ -155,7 +155,7 @@ export default function OnboardingPage() {
                 required
                 value={farmName}
                 onChange={(e) => setFarmName(e.target.value)}
-                className="w-full rounded-lg border border-[#E5DAC8] bg-white px-3.5 py-2.5 text-sm text-[#3D2B14] placeholder-[#C9B89A] focus:outline-none focus:ring-2 focus:ring-[#4A7C2F] focus:border-transparent transition"
+                className="w-full rounded-lg border border-[#CBD5E1] bg-white px-3.5 py-2.5 text-sm text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#22C55E] focus:border-transparent transition"
                 placeholder="Green Valley Farm"
               />
             </div>
@@ -163,12 +163,12 @@ export default function OnboardingPage() {
             <div>
               <label
                 htmlFor="slug"
-                className="block text-sm font-medium text-[#3D2B14] mb-1.5"
+                className="block text-sm font-medium text-[#0F172A] mb-1.5"
               >
                 Farm URL slug
               </label>
-              <div className="flex rounded-lg border border-[#E5DAC8] overflow-hidden focus-within:ring-2 focus-within:ring-[#4A7C2F] focus-within:border-transparent transition">
-                <span className="inline-flex items-center px-3 bg-[#F7F3EC] border-r border-[#E5DAC8] text-sm text-[#8B7355] whitespace-nowrap">
+              <div className="flex rounded-lg border border-[#CBD5E1] overflow-hidden focus-within:ring-2 focus-within:ring-[#22C55E] focus-within:border-transparent transition">
+                <span className="inline-flex items-center px-3 bg-[#F1F5F9] border-r border-[#CBD5E1] text-sm text-[#64748B] whitespace-nowrap">
                   herdcore.app/
                 </span>
                 <input
@@ -181,11 +181,11 @@ export default function OnboardingPage() {
                     setSlugEdited(true);
                     setSlug(slugify(e.target.value));
                   }}
-                  className="flex-1 bg-white px-3 py-2.5 text-sm text-[#3D2B14] placeholder-[#C9B89A] focus:outline-none"
+                  className="flex-1 bg-white px-3 py-2.5 text-sm text-[#0F172A] placeholder-[#94A3B8] focus:outline-none"
                   placeholder="green-valley-farm"
                 />
               </div>
-              <p className="mt-1.5 text-xs text-[#8B7355]">
+              <p className="mt-1.5 text-xs text-[#64748B]">
                 Lowercase letters, numbers, and hyphens only
               </p>
             </div>
@@ -193,7 +193,7 @@ export default function OnboardingPage() {
             <div>
               <label
                 htmlFor="country"
-                className="block text-sm font-medium text-[#3D2B14] mb-1.5"
+                className="block text-sm font-medium text-[#0F172A] mb-1.5"
               >
                 Country
               </label>
@@ -201,7 +201,7 @@ export default function OnboardingPage() {
                 id="country"
                 value={country}
                 onChange={(e) => setCountry(e.target.value)}
-                className="w-full rounded-lg border border-[#E5DAC8] bg-white px-3.5 py-2.5 text-sm text-[#3D2B14] focus:outline-none focus:ring-2 focus:ring-[#4A7C2F] focus:border-transparent transition"
+                className="w-full rounded-lg border border-[#CBD5E1] bg-white px-3.5 py-2.5 text-sm text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#22C55E] focus:border-transparent transition"
               >
                 {COUNTRIES.map((c) => (
                   <option key={c} value={c}>
@@ -214,7 +214,7 @@ export default function OnboardingPage() {
             <button
               type="submit"
               disabled={loading || !farmName.trim() || !slug.trim()}
-              className="w-full rounded-lg bg-[#4A7C2F] hover:bg-[#3D6B24] disabled:opacity-60 disabled:cursor-not-allowed px-4 py-2.5 text-sm font-semibold text-white transition focus:outline-none focus:ring-2 focus:ring-[#4A7C2F] focus:ring-offset-2"
+              className="w-full rounded-lg bg-[#16A34A] hover:bg-[#15803D] disabled:opacity-60 disabled:cursor-not-allowed px-4 py-2.5 text-sm font-semibold text-white transition focus:outline-none focus:ring-2 focus:ring-[#16A34A] focus:ring-offset-2"
             >
               {loading ? "Creating farm..." : "Create farm & continue"}
             </button>

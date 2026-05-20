@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -29,6 +30,19 @@ export default function RegisterPage() {
 
       if (!res.ok) {
         setError(data.error || "Registration failed. Please try again.");
+        return;
+      }
+
+      // Sign in immediately so the JWT cookie is set before hitting /api/onboarding
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        setError("Account created but sign-in failed. Please log in manually.");
+        router.push("/login");
         return;
       }
 

@@ -105,18 +105,18 @@ function eventTypeLabel(type: string): string {
 
 function eventTypeColor(type: string): string {
   const colors: Record<string, string> = {
-    BORN: "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300",
-    PURCHASED: "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300",
-    SOLD: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300",
-    TREATMENT: "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300",
-    VACCINATION: "bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300",
-    WEIGHT: "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300",
-    MOVEMENT: "bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300",
-    BREEDING: "bg-pink-100 text-pink-700 dark:bg-pink-900 dark:text-pink-300",
-    CALVING: "bg-teal-100 text-teal-700 dark:bg-teal-900 dark:text-teal-300",
-    DEATH: "bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-400",
+    BORN: "bg-green-100 text-green-700",
+    PURCHASED: "bg-blue-100 text-blue-700",
+    SOLD: "bg-amber-100 text-amber-700",
+    TREATMENT: "bg-red-100 text-red-700",
+    VACCINATION: "bg-purple-100 text-purple-700",
+    WEIGHT: "bg-stone-100 text-stone-600",
+    MOVEMENT: "bg-orange-100 text-orange-700",
+    BREEDING: "bg-pink-100 text-pink-700",
+    CALVING: "bg-teal-100 text-teal-700",
+    DEATH: "bg-stone-200 text-stone-500",
   };
-  return colors[type] ?? "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400";
+  return colors[type] ?? "bg-stone-100 text-stone-500";
 }
 
 const kpiCards = [
@@ -128,8 +128,8 @@ const kpiCards = [
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
       </svg>
     ),
-    color: "text-blue-600 dark:text-blue-400",
-    bg: "bg-blue-50 dark:bg-blue-950",
+    color: "text-amber-700",
+    bg: "bg-amber-50",
   },
   {
     key: "activeThisMonth",
@@ -139,8 +139,8 @@ const kpiCards = [
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M13 10V3L4 14h7v7l9-11h-7z" />
       </svg>
     ),
-    color: "text-green-600 dark:text-green-400",
-    bg: "bg-green-50 dark:bg-green-950",
+    color: "text-[#4A7C2F]",
+    bg: "bg-green-50",
   },
   {
     key: "upcomingVaccinations",
@@ -150,8 +150,8 @@ const kpiCards = [
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
       </svg>
     ),
-    color: "text-purple-600 dark:text-purple-400",
-    bg: "bg-purple-50 dark:bg-purple-950",
+    color: "text-teal-700",
+    bg: "bg-teal-50",
   },
   {
     key: "pendingMovements",
@@ -161,8 +161,8 @@ const kpiCards = [
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
       </svg>
     ),
-    color: "text-orange-600 dark:text-orange-400",
-    bg: "bg-orange-50 dark:bg-orange-950",
+    color: "text-orange-700",
+    bg: "bg-orange-50",
   },
 ];
 
@@ -192,8 +192,8 @@ export default async function DashboardPage() {
     <div className="space-y-6">
       {/* Page header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+        <h1 className="text-2xl font-bold text-[#1C1208]">Dashboard</h1>
+        <p className="text-sm text-[#8B7355] mt-0.5">
           Overview of your herd and farm activity
         </p>
       </div>
@@ -203,17 +203,17 @@ export default async function DashboardPage() {
         {kpiCards.map((card) => (
           <div
             key={card.key}
-            className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-5"
+            className="bg-white rounded-xl border border-[#E5DAC8] p-5"
           >
             <div className="flex items-center gap-3">
               <div className={`${card.bg} ${card.color} p-2.5 rounded-lg`}>
                 {card.icon}
               </div>
               <div className="min-w-0">
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                <p className="text-2xl font-bold text-[#1C1208]">
                   {values[card.key].toLocaleString()}
                 </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 truncate">
+                <p className="text-xs text-[#8B7355] mt-0.5 truncate">
                   {card.label}
                 </p>
               </div>
@@ -223,31 +223,31 @@ export default async function DashboardPage() {
       </div>
 
       {/* Recent Activity */}
-      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800">
-        <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-800">
-          <h2 className="text-base font-semibold text-gray-900 dark:text-white">
+      <div className="bg-white rounded-xl border border-[#E5DAC8]">
+        <div className="px-6 py-4 border-b border-[#E5DAC8]">
+          <h2 className="text-base font-semibold text-[#1C1208]">
             Recent Activity
           </h2>
-          <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+          <p className="text-xs text-[#8B7355] mt-0.5">
             Last 7 days of herd events
           </p>
         </div>
 
-        <div className="divide-y divide-gray-50 dark:divide-gray-800">
+        <div className="divide-y divide-[#F0E8D8]">
           {data.recentTimeline.length === 0 ? (
             <div className="px-6 py-10 text-center">
               <svg
-                className="mx-auto w-10 h-10 text-gray-300 dark:text-gray-600 mb-3"
+                className="mx-auto w-10 h-10 text-[#C9B89A] mb-3"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
               >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
               </svg>
-              <p className="text-sm text-gray-400 dark:text-gray-500">
+              <p className="text-sm text-[#8B7355]">
                 No activity in the last 7 days
               </p>
-              <p className="text-xs text-gray-300 dark:text-gray-600 mt-1">
+              <p className="text-xs text-[#C9B89A] mt-1">
                 Events will appear here as you record activity
               </p>
             </div>
@@ -260,14 +260,14 @@ export default async function DashboardPage() {
                   {eventTypeLabel(event.eventType)}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm text-gray-900 dark:text-white font-medium truncate">
+                  <p className="text-sm text-[#3D2B14] font-medium truncate">
                     {event.animal.name || event.animal.registrationNo}
                   </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                  <p className="text-xs text-[#8B7355] mt-0.5">
                     #{event.animal.registrationNo}
                   </p>
                 </div>
-                <span className="shrink-0 text-xs text-gray-400 dark:text-gray-500 whitespace-nowrap">
+                <span className="shrink-0 text-xs text-[#8B7355] whitespace-nowrap">
                   {formatDistanceToNow(new Date(event.occurredAt))}
                 </span>
               </div>
